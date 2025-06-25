@@ -19,9 +19,27 @@ const page = async ({ params }: { params: { courseId: string } }) => {
         return redirect(`/`);
     }
 
+    const requiredFields = [
+        course.title,
+        course.description,
+        course.imageUrl,
+        course.price,
+        course.categoryId
+    ];
+
+    const totalFields= requiredFields.length;
+    const completedFields=requiredFields.filter(Boolean).length;
+
+    const completionText=`(${completedFields}/${totalFields})`
+
     return (
-        <div>
-            course id {params.courseId}
+        <div className='p-6 '>
+          <div className='flex items-center justify-between'>
+            <div className='flex flex-col gap-y-2'>
+                <h1 className='text-2xl font-medium'>Course setup</h1>
+                <span className='text-sm text-slate-700'>Complete all fields {completionText}</span>
+            </div>
+          </div>
         </div>
     )
 }
