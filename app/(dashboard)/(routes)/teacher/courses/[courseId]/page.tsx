@@ -8,6 +8,7 @@ import React from 'react'
 import TitleForm from './_components/TitleForm';
 import { Description } from '@radix-ui/react-dialog';
 import DescriptionForm from './_components/DescriptionForm';
+import ImageForm from './_components/ImageForm';
 
 const page = async ({ params }: { params: { courseId: string } }) => {
 
@@ -56,6 +57,7 @@ const page = async ({ params }: { params: { courseId: string } }) => {
                 </div>
                 <TitleForm  initialData={course} courseId={course.id}/>
                 <DescriptionForm  initialData={course} courseId={course.id}/>
+                <ImageForm  initialData={course} courseId={course.id} />
             </div>
           </div>
         </div>
