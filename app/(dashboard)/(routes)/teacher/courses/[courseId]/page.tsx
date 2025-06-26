@@ -2,7 +2,7 @@
 import { IconBadge } from '@/components/iconBadge';
 import { db } from '@/lib/db'
 import { auth } from '@clerk/nextjs/server'
-import { CircleDollarSign, LayoutDashboard, ListCheck, ListChecks } from 'lucide-react';
+import { CircleDollarSign, File, LayoutDashboard, ListChecks } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import TitleForm from './_components/TitleForm';
@@ -11,6 +11,7 @@ import ImageForm from './_components/ImageForm';
 import CategoryForm from './_components/CategoryForm';
 import { Label } from '@radix-ui/react-label';
 import PriceForm from './_components/PriceForm ';
+import AttachemntForm from './_components/AttachemntForm';
 
 const page = async ({ params }: { params: { courseId: string } }) => {
 
@@ -22,6 +23,13 @@ const page = async ({ params }: { params: { courseId: string } }) => {
         where: {
             id: params.courseId,
         },
+        include: {
+            attachments: {
+                orderBy: {
+                    createdAt: 'desc',
+                }
+            }
+        }
     });
 
     const categories = await db.category.findMany({
@@ -69,9 +77,9 @@ const page = async ({ params }: { params: { courseId: string } }) => {
                     <TitleForm initialData={course} courseId={course.id} />
                     <DescriptionForm initialData={course} courseId={course.id} />
                     <ImageForm initialData={course} courseId={course.id} />
-                    <CategoryForm initialData={course} courseId={course.id} options={categories.map((category)=>({
-                        label:category.name,
-                        value:category.id
+                    <CategoryForm initialData={course} courseId={course.id} options={categories.map((category) => ({
+                        label: category.name,
+                        value: category.id
                     }))} />
                 </div>
                 <div className='space-y-6 '>
@@ -89,6 +97,13 @@ const page = async ({ params }: { params: { courseId: string } }) => {
                         <h2 className='text-xl'>Sell your Course</h2>
                     </div>
                     <PriceForm initialData={course} courseId={course.id} />
+
+                    <div className='flex items-center gap-x-2'>
+                        {/* @ts-expect-error */}
+                        <IconBadge icon={File} />
+                        <h2 className='text-xl'>Resources & Attachments</h2>
+                    </div>
+                    <AttachemntForm initialData={course} courseId={course.id} />
                 </div>
             </div>
         </div>
