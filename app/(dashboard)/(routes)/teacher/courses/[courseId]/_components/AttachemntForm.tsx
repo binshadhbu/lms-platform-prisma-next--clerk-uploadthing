@@ -48,7 +48,7 @@ const AttachemntForm = ({ initialData, courseId }: AttachemntFormProps) => {
             router.refresh();
 
         } catch (error) {
-            console.error("Error deleting attachment:", error);
+            console.log("Error deleting attachment:", error);
             toast.error("Error deleting attachment");
         } finally {
             setDeletingId(null);
