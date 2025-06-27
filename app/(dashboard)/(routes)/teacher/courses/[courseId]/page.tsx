@@ -9,9 +9,9 @@ import TitleForm from './_components/TitleForm';
 import DescriptionForm from './_components/DescriptionForm';
 import ImageForm from './_components/ImageForm';
 import CategoryForm from './_components/CategoryForm';
-import { Label } from '@radix-ui/react-label';
 import PriceForm from './_components/PriceForm ';
 import AttachemntForm from './_components/AttachemntForm';
+import ChapterForm from './_components/ChapterForm';
 
 const page = async ({ params }: { params: { courseId: string } }) => {
 
@@ -22,8 +22,14 @@ const page = async ({ params }: { params: { courseId: string } }) => {
     const course = await db.course.findUnique({
         where: {
             id: params.courseId,
+            userId
         },
         include: {
+            chapters: {
+                orderBy: {
+                    position: 'asc',
+                }
+            },
             attachments: {
                 orderBy: {
                     createdAt: 'desc',
@@ -38,8 +44,6 @@ const page = async ({ params }: { params: { courseId: string } }) => {
         }
     });
 
-    // console.log('course', course);
-    console.log('categories', categories);
 
     if (!course) {
         return redirect(`/`);
@@ -50,7 +54,8 @@ const page = async ({ params }: { params: { courseId: string } }) => {
         course.description,
         course.imageUrl,
         course.price,
-        course.categoryId
+        course.categoryId,
+        course.chapters.some(chapter => chapter.isPublished),
     ];
 
     const totalFields = requiredFields.length;
@@ -89,7 +94,7 @@ const page = async ({ params }: { params: { courseId: string } }) => {
                             <IconBadge icon={ListChecks} />
                             <h2 className='text-xl'>Course Chapters</h2>
                         </div>
-                        <div>TODO: Chapters</div>
+                        <ChapterForm initialData={course} courseId={course.id} />
                     </div>
                     <div className='flex items-center gap-x-2'>
                         {/* @ts-expect-error */}
