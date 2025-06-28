@@ -11,6 +11,7 @@ export async function PATCH(req: Request, { params }: { params: { courseId: stri
         const Values = await req.json();
         const { courseId } = params;
 
+
         const course = await db.course.update({
             where: {
                 id: courseId,

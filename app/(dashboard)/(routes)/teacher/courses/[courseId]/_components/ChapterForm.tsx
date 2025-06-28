@@ -7,10 +7,10 @@ import { Chapter, Course } from '@/lib/generated/prisma';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import { Pencil, PlusCircle } from 'lucide-react';
+import { Loader2, Pencil, PlusCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react'
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod'
 import { ca } from 'zod/v4/locales';
@@ -55,8 +55,30 @@ const ChapterForm = ({ initialData, courseId }: CourseFormProps) => {
         }
     }
 
+    const onReorder = async (updateData: { id: string, position: number }[]) => {
+        try {
+            setIsUpdating(true);
+            await axios.put(`/api/courses/${courseId}/chapters/reorder`, { list: updateData });
+            toast.success("Chapters reordered successfully!");
+            router.refresh();
+        } catch {
+            toast.error("Sorry can't reorder chapters right now.");
+        } finally {
+            setIsUpdating(false);
+        }
+    }
+
+    const onEdit = async (id: string) => {
+        router.push(`/teacher/courses/${courseId}/chapters/${id}`);
+    }
+
     return (
-        <div className='mt-6 border bg-slate-100 rounded-md p-4'>
+        <div className='relative mt-6 border bg-slate-100 rounded-md p-4'>
+            {isUpdating && (
+                <div className='absolute h-full w-full bg-slate-500/20 top-0 right-0 rounded-md flex items-center justify-center'>
+                    <Loader2 className='animate-spin h-6 w-6 text-sky-700 '/>
+                </div>
+            )}
             <div className='font-medium flex items-center justify-between'>
                 Course Chapters
                 <Button onClick={toggleCreating} variant={'ghost'} className='hover:cursor-pointer  bg-blue-900 text-white '>
@@ -92,7 +114,7 @@ const ChapterForm = ({ initialData, courseId }: CourseFormProps) => {
                 <div className={cn('text-sm mt-2', !initialData.chapters.length && 'text-slate-500 italic')}>
                     {!initialData.chapters.length && "No chapters added yet."}
                     {/* todo add a list )} */}
-                    <ChapterList onEdit={()=>{}} onReorder={()=>{}} items={initialData.chapters || []} />
+                    <ChapterList onEdit={onEdit} onReorder={onReorder} items={initialData.chapters || []} />
                 </div>
             )}
             {!isCreating && (

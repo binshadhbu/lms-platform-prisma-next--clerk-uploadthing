@@ -5,6 +5,8 @@ import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea
 import { cn } from '@/lib/utils';
 import { Grip, Pencil } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { cpuUsage } from 'process';
+import { set } from 'react-hook-form';
 
 
 interface ChapterListProps {
@@ -25,14 +27,37 @@ const ChapterList = ({ items, onReorder, onEdit }: ChapterListProps) => {
         setChapters(items);
     }, [items])
 
+    const onDragEnd = (result: DropResult) => {
+
+        if (!result.destination) {
+            return;
+        }
+        const items = Array.from(chapters);
+        const [recordredItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, recordredItem);
+
+        const startIndex = Math.min(result.source.index, result.destination.index);
+        const endIndex = Math.max(result.source.index, result.destination.index);
+
+        const updatedChapters = items.slice(startIndex, endIndex + 1);
+        setChapters(items);
+
+        const buldUpdateData = updatedChapters.map((chapter) => ({
+            id: chapter.id,
+            position: items.findIndex((item) => item.id === chapter.id)
+        }));
+
+        onReorder(buldUpdateData);
+    }
+
     if (!isMounted) {
         // setIsMounted(true);
         return null;
     }
 
     return (
-        <DragDropContext onDragEnd={() => { }}>
-            <Droppable droppableId='chapters'>
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId='chapters' >
                 {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef}>
                         {chapters.map((chapters, index) => (
@@ -48,7 +73,7 @@ const ChapterList = ({ items, onReorder, onEdit }: ChapterListProps) => {
                                                 <Badge>Free</Badge>
                                             )}
                                             <Badge className={cn("bg-slate-500 ", chapters.isPublished && "bg-sky-700")}>{chapters.isPublished ? "Published" : "Drafted"}</Badge>
-                                            <Pencil onClick={() => onEdit(chapters.id)} className='h-4 w-4 cursor-pointer hover:opacity-75 transition'/>
+                                            <Pencil onClick={() => onEdit(chapters.id)} className='h-4 w-4 cursor-pointer hover:opacity-75 transition' />
                                         </div>
                                     </div>
                                 )}
