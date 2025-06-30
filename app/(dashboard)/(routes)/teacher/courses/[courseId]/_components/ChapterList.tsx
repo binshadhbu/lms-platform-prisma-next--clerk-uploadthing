@@ -70,7 +70,7 @@ const ChapterList = ({ items, onReorder, onEdit }: ChapterListProps) => {
                                         {chapters.title}
                                         <div className='ml-auto pr-2 flex items-center gap-x-2'>
                                             {chapters.isFree && (
-                                                <Badge>Free</Badge>
+                                                <Badge className='bg-amber-400 font-bold' >Free</Badge>
                                             )}
                                             <Badge className={cn("bg-slate-500 ", chapters.isPublished && "bg-sky-700")}>{chapters.isPublished ? "Published" : "Drafted"}</Badge>
                                             <Pencil onClick={() => onEdit(chapters.id)} className='h-4 w-4 cursor-pointer hover:opacity-75 transition' />

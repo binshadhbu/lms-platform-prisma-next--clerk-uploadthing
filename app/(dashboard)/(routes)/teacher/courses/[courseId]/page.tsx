@@ -12,6 +12,9 @@ import CategoryForm from './_components/CategoryForm';
 import PriceForm from './_components/PriceForm ';
 import AttachemntForm from './_components/AttachemntForm';
 import ChapterForm from './_components/ChapterForm';
+import { isUploadable } from '@mux/mux-node/uploads.mjs';
+import Banner from '@/components/banner';
+import Actions from './_components/Actions';
 
 const page = async ({ params }: { params: { courseId: string } }) => {
 
@@ -61,15 +64,26 @@ const page = async ({ params }: { params: { courseId: string } }) => {
     const totalFields = requiredFields.length;
     const completedFields = requiredFields.filter(Boolean).length;
 
-    const completionText = `(${completedFields}/${totalFields})`
+    const completionText = `(${completedFields}/${totalFields})`;
+
+    const isComplete = requiredFields.every(Boolean);
+
 
     return (
+        <>
+        {!course.isPublished && (
+            <Banner
+                label='Your course is not published yet'
+            />
+        )}
         <div className='p-6 '>
             <div className='flex items-center justify-between'>
                 <div className='flex flex-col gap-y-2'>
                     <h1 className='text-2xl font-medium'>Course setup</h1>
                     <span className='text-sm text-slate-700'>Complete all fields {completionText}</span>
                 </div>
+                {/* add actions */}
+                <Actions disabled={!isComplete} courseId={course.id}  isPublished={course.isPublished} />
             </div>
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-16'>
@@ -112,6 +126,7 @@ const page = async ({ params }: { params: { courseId: string } }) => {
                 </div>
             </div>
         </div>
+        </>
     )
 }
 

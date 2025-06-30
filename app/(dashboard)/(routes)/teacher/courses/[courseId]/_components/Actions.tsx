@@ -7,27 +7,27 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 
-interface ChapterActionsProps {
+interface ActionsProps {
     disabled: boolean;
     courseId: string;
-    chapterId: string;
+    
     isPublished: boolean;
 }
 
-const ChapterActions = ({ disabled, courseId, chapterId, isPublished }: ChapterActionsProps) => {
+const Actions = ({ disabled, courseId, isPublished }: ActionsProps) => {
     const router = useRouter();
     const [isLoading, setLoading] = useState(false);
 
     const onDelete = async () => {
         try {
             setLoading(true);
-            await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
-            toast.success("Chapter deleted successfully!");
+            await axios.delete(`/api/courses/${courseId}`);
+            toast.success("Course deleted successfully!");
             router.refresh();
-            router.push(`/teacher/courses/${courseId}`);
+            router.push(`/teacher/courses`);
             setLoading(false);
         } catch {
-            toast.error("Something went wrong while deleting the chapter.");
+            toast.error("Something went wrong while deleting the course.");
         } finally {
             setLoading(false);
         }
@@ -38,11 +38,11 @@ const ChapterActions = ({ disabled, courseId, chapterId, isPublished }: ChapterA
             setLoading(true);
 
             if(isPublished){
-                await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/unpublished`);
-                toast.success("Chapter unpublished successfully!");
+                await axios.patch(`/api/courses/${courseId}/unpublish`);
+                toast.success("Course unpublished successfully!");
             }else{
-                await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}/published`);
-                toast.success("Chapter published successfully!");
+                await axios.patch(`/api/courses/${courseId}/publish`);
+                toast.success("Course published successfully!");
             }
             router.refresh();
         }catch{
@@ -55,7 +55,7 @@ const ChapterActions = ({ disabled, courseId, chapterId, isPublished }: ChapterA
     return (
         <div className='flex items-center gap-x-2'>
             <Button onClick={onClick} disabled={disabled || isLoading} variant={'outline'} className='bg-blue-900 text-white hover:bg-slate-400'>
-                {isPublished ? "Unpublish Chapter" : "Publish Chapter"}
+                {isPublished ? "Unpublish Course" : "Publish Course"}
             </Button>
             <ConfirmModal onConfirm={onDelete} >
                 <Button size='sm' className='' disabled={isLoading}>
@@ -67,4 +67,4 @@ const ChapterActions = ({ disabled, courseId, chapterId, isPublished }: ChapterA
     )
 }
 
-export default ChapterActions
+export default Actions
