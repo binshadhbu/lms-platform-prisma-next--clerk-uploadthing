@@ -4,6 +4,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "react-hot-toast";
 import ToasterProvider from "@/components/providers/toaster-rpovider";
+// import { ConfettiProvider } from "@/components/providers/confettiProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          {/* <ConfettiProvider/> */}
           <ToasterProvider/>
           {children}
         </body>
