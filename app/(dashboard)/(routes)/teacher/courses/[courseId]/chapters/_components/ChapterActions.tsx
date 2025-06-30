@@ -24,6 +24,8 @@ const ChapterActions = ({ disabled, courseId, chapterId, isPublished }: ChapterA
             setLoading(true);
             await axios.delete(`/api/courses/${courseId}/chapters/${chapterId}`);
             toast.success("Chapter deleted successfully!");
+            router.refresh();
+            router.push(`/teacher/courses/${courseId}`);
             setLoading(false);
         } catch {
             toast.error("Something went wrong while deleting the chapter.");
@@ -34,11 +36,11 @@ const ChapterActions = ({ disabled, courseId, chapterId, isPublished }: ChapterA
 
     return (
         <div className='flex items-center gap-x-2'>
-            <Button onClick={() => { }} disabled={disabled} variant={'outline'} className='bg-blue-900 text-white hover:bg-slate-400'>
+            <Button onClick={() => { }} disabled={disabled || isLoading} variant={'outline'} className='bg-blue-900 text-white hover:bg-slate-400'>
                 {isPublished ? "Unpublish Chapter" : "Publish Chapter"}
             </Button>
-            <ConfirmModal onConfirm={() => { }} >
-                <Button size='sm' className=''>
+            <ConfirmModal onConfirm={onDelete} >
+                <Button size='sm' className='' disabled={isLoading}>
                     <Trash />
                 </Button>
             </ConfirmModal>
