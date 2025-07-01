@@ -7,6 +7,7 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
+  // previewFeatures = ["fullTextSearch","fullTextIndex"]
 }
 
 datasource db {
@@ -33,6 +34,7 @@ model Course {
   Purchase    Purchase[]
 
   @@index([categoryId])
+  // @@fullText([title])
 }
 
 model Category {
