@@ -8,6 +8,8 @@ import CourseEnrollButton from '../../_components/CourseEnrollButton';
 import { Separator } from '@/components/ui/separator';
 import Preview from '@/components/preview';
 import { File } from 'lucide-react';
+import CourseProgress from '@/components/CourseProgress';
+import CourseProgressButton from '../../_components/CourseProgressButton';
 
 const page = async ({ params }: { params: { chapterId: string, courseId: string } }) => {
     const { userId } = await auth();
@@ -41,7 +43,8 @@ const page = async ({ params }: { params: { chapterId: string, courseId: string 
                     <div className='p-4 flex flex-col md:flex-row items-center justify-between'>
                         <h2 className='text-2xl font-semibold mb-2'>{chapter.title}</h2>
                         {purchase ? (
-                            <div>todo progress</div>
+                            <CourseProgressButton chapterId={params.chapterId} courseId={params.courseId}
+                                nextChapterId={nextChapter?.id} isCompleted={!!userProgress?.isCompleted} />
                         ) : (
                             <CourseEnrollButton courseId={params.courseId} price={course.price!} />
                         )}
@@ -57,7 +60,7 @@ const page = async ({ params }: { params: { chapterId: string, courseId: string 
                                 {
                                     attachements.map((attachement) => (
                                         <a href={attachement.url} key={attachement.id} target='_blank' className='flex items-center p-3 w-full bg-sky-200 boder text-sky-700 rounded-md hover:underline'>
-                                            <File  />
+                                            <File />
                                             <p className='line-clamp-1'>{attachement.name}</p>
                                         </a>
                                     ))

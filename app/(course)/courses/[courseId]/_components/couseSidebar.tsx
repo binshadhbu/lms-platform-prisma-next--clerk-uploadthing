@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import React from 'react'
 import CourseSideBarItem from './CourseSideBarItem';
+import CourseProgress from '@/components/CourseProgress';
 
 interface CourseSidebarProps {
     course: Course & {
@@ -35,6 +36,11 @@ const CourseSidebar = async ({ course, progressCount }: CourseSidebarProps) => {
             <div className='p-8 flex flex-col border-b'>
                 <h1 className='font-semibold'>{course.title}</h1>
                 {/* check purchase and progress */}
+                {purchase && (
+                    <div className='mt-10'>
+                        <CourseProgress value={progressCount} variant="success" />
+                    </div>
+                )}
             </div>
 
             <div className='flex flex-col w-full'>

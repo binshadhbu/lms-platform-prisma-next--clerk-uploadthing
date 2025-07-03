@@ -5,8 +5,7 @@ import Link from 'next/link';
 import React from 'react'
 import { IconBadge } from './iconBadge';
 import { BookOpen } from 'lucide-react';
-import { format } from 'path';
-import { formatPrice } from '@/lib/format';
+import CourseProgress from './CourseProgress';
 
 interface CourseCardProps {
     id: string;
@@ -37,7 +36,7 @@ const CourseCard = ({ id, title, imageUrl, chaptersLength, price, progress, cate
                         </div>
                     </div>
                     {progress !== null ? (
-                        <div>TODO : Progress Bar</div>
+                        <CourseProgress size='sm' value={progress} variant={progress === 100 ? "success" : "default"} />
                     ) : (
                         <p className='text-md md:text-sm font-medium text-slate-700'>{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'INR', }).format(price)}</p>
                     )}
